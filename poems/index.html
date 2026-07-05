@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poems — Jury of Poets</title>
+  <meta name="description" content="Poetry from Jury of Poets. A literary magazine where poets read poets.">
+  <meta property="og:title" content="Poems — Jury of Poets">
+  <meta property="og:description" content="Poetry from Jury of Poets.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #FBF6F4; --ink: #3D2028; --secondary: #7A5560; --tertiary: #A8909A;
+      --rule: #E5D5D8; --warm: #F5EDE8; --rose: #B87D82; --rose-soft: #ECDCDE;
+      --burgundy: #6B2D3E; --gold-muted: #C9AC6A; --gold-soft: #F0E6CF;
+      --serif: 'Cormorant Garamond', 'Georgia', serif;
+      --sans: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--bg); transition: box-shadow 0.3s; }
+    nav.scrolled { box-shadow: 0 1px 0 var(--rule); }
+    nav .inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--serif); font-size: 18px; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-link { font-size: 13px; color: var(--tertiary); text-decoration: none; transition: color 0.2s; }
+    .nav-link:hover { color: var(--ink); }
+    .nav-link.active { color: var(--ink); }
+
+    main { flex: 1; }
+    footer { border-top: 1px solid var(--rule); }
+    footer .inner { max-width: 720px; margin: 0 auto; padding: 32px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .footer-left { font-family: var(--serif); font-size: 14px; color: var(--tertiary); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 13px; color: var(--tertiary); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--ink); }
+
+    .page-header { max-width: 600px; margin: 0 auto; padding: 120px 24px 20px; text-align: center; }
+    .page-title { font-family: var(--serif); font-size: clamp(32px, 6vw, 48px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .page-subtitle { font-family: var(--sans); font-size: 14px; color: var(--tertiary); }
+
+    .deck-section { max-width: 480px; margin: 0 auto; padding: 40px 24px 100px; }
+
+    .genre-tabs { display: flex; gap: 0; justify-content: center; flex-wrap: wrap; margin-top: 32px; align-items: center; line-height: 2.2; }
+    .genre-tab {
+      font-family: var(--sans); font-size: 12px; padding: 0;
+      border: none; border-radius: 0;
+      background: transparent; color: var(--rule);
+      cursor: pointer; transition: color 0.2s;
+      letter-spacing: 0.03em;
+    }
+    .genre-tab:hover { color: var(--secondary); }
+    .genre-tab.active { color: var(--ink); }
+    .genre-sep { color: var(--rule); font-size: 9px; margin: 0 12px; user-select: none; opacity: 0.5; }
+
+    .deck { position: relative; height: 380px; touch-action: pan-y; }
+
+    .poem-card {
+      position: absolute; width: 100%; left: 0; top: 0;
+      height: 100%;
+      background: var(--bg); border: 1px solid var(--rule); border-radius: 8px;
+      padding: 32px;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      user-select: none; text-decoration: none; color: inherit;
+      opacity: 0; pointer-events: none; transform: translateX(20px);
+    }
+    .poem-card.front { opacity: 1; pointer-events: auto; cursor: pointer; transform: translateX(0); z-index: 1; }
+    .poem-card.front:hover { box-shadow: 0 8px 40px rgba(61, 32, 40, 0.08); border-color: var(--rose-soft); }
+    .poem-card.gone-left { opacity: 0; transform: translateX(-20px); }
+    .poem-card.gone-right { opacity: 0; transform: translateX(20px); }
+
+    .pc-tags { display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; }
+    .pc-tag { font-size: 11px; padding: 3px 12px; border-radius: 100px; background: var(--warm); color: var(--tertiary); }
+    .pc-title { font-family: var(--serif); font-size: clamp(20px, 4vw, 26px); font-weight: 500; line-height: 1.25; height: 66px; display: flex; align-items: center; justify-content: center; }
+    .pc-author { font-family: var(--serif); font-size: 16px; font-style: italic; font-weight: 300; color: var(--secondary); margin: 8px 0 24px; }
+    .pc-ornament { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
+    .pc-ornament span { width: 20px; height: 1px; background: var(--rule); }
+    .pc-ornament svg { color: var(--gold-muted); }
+    .pc-quote { font-family: var(--serif); font-size: 19px; font-weight: 300; font-style: italic; color: var(--ink); line-height: 1.7; }
+    .pc-read { font-size: 13px; color: var(--rose); transition: color 0.2s; margin-top: auto; padding-top: 20px; }
+    .poem-card.front:hover .pc-read { color: var(--ink); }
+
+    .deck-nav { display: flex; justify-content: center; gap: 6px; margin-top: 24px; align-items: center; }
+
+    .deck-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rule); transition: background 0.3s, transform 0.3s; cursor: pointer; }
+    .deck-dot.active { background: var(--ink); transform: scale(1.4); }
+
+    .deck-arrow {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid var(--rule); background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 16px; color: var(--tertiary);
+      transition: border-color 0.2s, color 0.2s; margin: 0 8px;
+    }
+    .deck-arrow:hover { border-color: var(--rose-soft); color: var(--ink); }
+
+    @media (max-width: 640px) {
+      .page-header { padding: 100px 20px 16px; }
+      .deck-section { padding: 32px 16px 80px; }
+      .poem-card { padding: 32px 24px 28px; }
+      nav .inner { padding: 0 16px; }
+    }
+    @media (max-width: 480px) { footer .inner { flex-direction: column; gap: 12px; } }
+  </style>
+</head>
+<body>
+  <nav id="nav">
+    <div class="inner">
+      <a href="/" class="logo">Jury of Poets</a>
+      <div class="nav-links">
+        <a href="/poems/" class="nav-link active">Poems</a>
+        <a href="/#join" class="nav-link">Join</a>
+        <a href="https://instagram.com/juryofpoets" target="_blank" rel="noopener" class="nav-link">Instagram ↗</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <header class="page-header">
+      <h1 class="page-title">Poems</h1>
+      <p class="page-subtitle">For now, enjoy some poetry by our very own Ronan.</p>
+    </header>
+
+    <section class="deck-section">
+      <div class="deck" id="deck"></div>
+      <div class="deck-nav" id="deck-nav"></div>
+      <div class="genre-tabs" id="tabs"></div>
+    </section>
+  </main>
+
+  <footer><div class="inner"><span class="footer-left">Written, read, and curated by poets.</span><div class="footer-links"><a href="https://instagram.com/juryofpoets" target="_blank" rel="noopener">Instagram</a><a href="mailto:juryofpoets@gmail.com">Contact</a></div></div></footer>
+
+  <script>
+    var nav = document.getElementById('nav');
+    window.addEventListener('scroll', function() { nav.classList.toggle('scrolled', window.scrollY > 20); });
+
+    var poems = [
+      {
+        title: "To the 87,013 Brides Who Married Today",
+        author: "Ronan Rahl",
+        tags: ["love", "witness"],
+        quote: "You said it today.<br>You never asked me to.",
+        url: "/poems/to-the-87013-brides-who-married-today.html"
+      }
+    ];
+
+    var allTags = ["all", "identity", "love", "confessional", "grief", "solitude", "romance", "myth", "nature", "humor", "desire", "referential", "witness", "ekphrastic", "history"];
+
+    var activeTag = "all";
+    var currentIndex = 0;
+    var filtered = poems.slice();
+
+    function render() {
+      filtered = activeTag === "all" ? poems.slice() : poems.filter(function(p) { return p.tags.indexOf(activeTag) !== -1; });
+      if (currentIndex >= filtered.length) currentIndex = 0;
+
+      var tabsEl = document.getElementById("tabs");
+      tabsEl.innerHTML = "";
+      allTags.forEach(function(tag, i) {
+        var btn = document.createElement("button");
+        btn.className = "genre-tab" + (tag === activeTag ? " active" : "");
+        btn.textContent = tag;
+        btn.onclick = function() { activeTag = tag; currentIndex = 0; render(); };
+        tabsEl.appendChild(btn);
+        if (i < allTags.length - 1) {
+          var sep = document.createElement("span");
+          sep.className = "genre-sep";
+          sep.textContent = "·";
+          tabsEl.appendChild(sep);
+        }
+      });
+
+      var deckEl = document.getElementById("deck");
+      deckEl.innerHTML = "";
+
+      if (filtered.length === 0) {
+        var empty = document.createElement("div");
+        empty.style.cssText = "display:flex;align-items:center;justify-content:center;height:100%;text-align:center;";
+        empty.innerHTML = '<div><p style="font-family:var(--serif);font-size:20px;font-style:italic;color:var(--tertiary);margin-bottom:8px;">Poems incoming.</p><p style="font-size:13px;color:var(--tertiary);">Nothing in <strong>' + activeTag + '</strong> yet — but there will be.</p></div>';
+        deckEl.appendChild(empty);
+      } else {
+        filtered.forEach(function(poem, i) {
+        var card = document.createElement("a");
+        card.href = poem.url;
+        card.className = "poem-card";
+        if (i === currentIndex) card.classList.add("front");
+        else if (i < currentIndex) card.classList.add("gone-left");
+        else card.classList.add("gone-right");
+
+        card.innerHTML =
+          '<div class="pc-tags">' + poem.tags.map(function(t) { return '<span class="pc-tag">' + t + '</span>'; }).join("") + '</div>' +
+          '<h2 class="pc-title">' + poem.title + '</h2>' +
+          '<p class="pc-author">' + poem.author + '</p>' +
+          '<div class="pc-ornament"><span></span><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M4 0L4.7 3.3L8 4L4.7 4.7L4 8L3.3 4.7L0 4L3.3 3.3Z" fill="currentColor"/></svg><span></span></div>' +
+          '<p class="pc-quote">' + poem.quote + '</p>' +
+          '<p class="pc-read">Read the poem →</p>';
+
+        deckEl.appendChild(card);
+      });
+      }
+
+      var navEl = document.getElementById("deck-nav");
+      navEl.innerHTML = "";
+
+      if (filtered.length > 1) {
+        var prev = document.createElement("button");
+        prev.className = "deck-arrow";
+        prev.innerHTML = "←";
+        prev.onclick = function(e) { e.preventDefault(); currentIndex = (currentIndex - 1 + filtered.length) % filtered.length; render(); };
+        navEl.appendChild(prev);
+
+        filtered.forEach(function(_, i) {
+          var dot = document.createElement("span");
+          dot.className = "deck-dot" + (i === currentIndex ? " active" : "");
+          dot.onclick = function() { currentIndex = i; render(); };
+          navEl.appendChild(dot);
+        });
+
+        var next = document.createElement("button");
+        next.className = "deck-arrow";
+        next.innerHTML = "→";
+        next.onclick = function(e) { e.preventDefault(); currentIndex = (currentIndex + 1) % filtered.length; render(); };
+        navEl.appendChild(next);
+      }
+    }
+
+    render();
+
+    // Touch swipe support
+    var startX = 0;
+    var deckEl = document.getElementById("deck");
+    deckEl.addEventListener("touchstart", function(e) {
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+    deckEl.addEventListener("touchend", function(e) {
+      var diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50 && filtered.length > 1) {
+        if (diff > 0) { currentIndex = (currentIndex + 1) % filtered.length; }
+        else { currentIndex = (currentIndex - 1 + filtered.length) % filtered.length; }
+        render();
+      }
+    }, { passive: true });
+
+    // Scroll wheel navigation
+    var scrollCooldown = false;
+    deckEl.addEventListener("wheel", function(e) {
+      if (scrollCooldown || filtered.length <= 1) return;
+      if (Math.abs(e.deltaY) > 20) {
+        e.preventDefault();
+        scrollCooldown = true;
+        if (e.deltaY > 0) { currentIndex = (currentIndex + 1) % filtered.length; }
+        else { currentIndex = (currentIndex - 1 + filtered.length) % filtered.length; }
+        render();
+        setTimeout(function() { scrollCooldown = false; }, 400);
+      }
+    }, { passive: false });
+
+    // Keyboard navigation
+    document.addEventListener("keydown", function(e) {
+      if (filtered.length <= 1) return;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        currentIndex = (currentIndex + 1) % filtered.length; render();
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        currentIndex = (currentIndex - 1 + filtered.length) % filtered.length; render();
+      }
+    });
+  </script>
+</body>
+</html>
