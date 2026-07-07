@@ -3,7 +3,7 @@ layout: poem.njk
 title: "Deafening Silence"
 author: "Ronan Rahl"
 poemTags: ["confessional", "solitude"]
-quote: "Finally. <em>finally.</em>"
+quote: "Finally. finally."
 order: 3
 tags: poem
 permalink: /poems/deafening-silence.html
