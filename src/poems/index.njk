@@ -29,7 +29,7 @@ styles: |
   .pc-ornament { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
   .pc-ornament span { width: 20px; height: 1px; background: var(--rule); }
   .pc-ornament svg { color: var(--gold-muted); }
-  .pc-quote { font-family: var(--serif); font-size: 19px; font-weight: 300; font-style: italic; color: var(--ink); line-height: 1.7; }
+  .pc-quote { font-family: var(--serif); font-size: 19px; font-weight: 300; color: var(--ink); line-height: 1.7; }
   .pc-read { font-size: 13px; color: var(--rose); transition: color 0.2s; margin-top: auto; padding-top: 20px; }
   .poem-card.front:hover .pc-read { color: var(--ink); }
   .deck-nav { display: flex; justify-content: center; gap: 6px; margin-top: 24px; align-items: center; }
@@ -53,7 +53,7 @@ styles: |
 </main>
 
 <script>
-  var poems = [{% for poem in collections.poems %}{ title: "{{ poem.data.title }}", author: "{{ poem.data.author }}", tags: {{ poem.data.poemTags | dump | safe }}, quote: "{{ poem.data.quote }}", url: "{{ poem.url }}" }{% if not loop.last %},{% endif %}{% endfor %}];
+  var poems = [{% for poem in collections.poems %}{ title: "{{ poem.data.title }}", author: "{{ poem.data.author }}", tags: {{ poem.data.poemTags | dump | safe }}, quote: "{{ poem.data.quote | safe }}", url: "{{ poem.url }}" }{% if not loop.last %},{% endif %}{% endfor %}];
   var allTags = {{ allTags | dump | safe }};
   var activeTag = "all", currentIndex = 0, filtered = poems.slice();
   function render() {
