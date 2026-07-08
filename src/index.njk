@@ -11,8 +11,6 @@ styles: |
   .hero-ornament { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 32px; opacity: 0; animation: rise 0.6s ease forwards 0.4s; }
   .hero-ornament span { width: 32px; height: 1px; background: var(--rule); }
   .hero-ornament svg { color: var(--gold-muted); }
-  .hero-statement { font-family: var(--sans); font-size: 14px; color: var(--tertiary); margin: 0 auto; line-height: 2; letter-spacing: 0.01em; opacity: 0; animation: rise 0.8s ease forwards 0.5s; }
-  .hero-rule { width: 48px; height: 1px; background: var(--rule); margin: 40px auto 0; opacity: 0; animation: rise 0.6s ease forwards 0.6s; }
   .float { position: absolute; pointer-events: none; opacity: 0; animation: floatIn 1s ease forwards; }
   @keyframes floatIn { from { opacity: 0; transform: translateY(8px) scale(0.8); } to { opacity: 1; transform: translateY(0) scale(1); } }
   .float-1 { top: 115px; left: 8%; animation: floatIn 1s ease forwards 0.8s, drift1 6s ease-in-out infinite 2s; }
@@ -51,13 +49,13 @@ styles: |
   .signup-success { display: none; font-family: var(--serif); font-size: 22px; font-style: italic; font-weight: 300; animation: rise 0.5s ease; }
   @media (max-width: 640px) {
     .hero { padding: 110px 20px 40px; } .hero-title { margin-bottom: 20px; } .hero-epigraph { margin-bottom: 24px; }
-    .hero-ornament { margin-bottom: 24px; } .hero-statement { font-size: 13px; line-height: 1.9; } .hero-rule { margin-top: 32px; }
+    .hero-ornament { margin-bottom: 24px; }
     .float { display: none; } .process { padding: 28px 20px 60px; } .process-label { font-size: 20px; margin-bottom: 32px; }
     .signup-inner { padding: 72px 20px; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-    .hero-title, .hero-epigraph, .hero-statement, .hero-ornament, .step, .float { opacity: 1; transform: none; }
+    .hero-title, .hero-epigraph, .hero-ornament, .step, .float { opacity: 1; transform: none; }
   }
 scripts: |
   <script>
@@ -77,8 +75,6 @@ permalink: /index.html
   <h1 class="hero-title">Every poem<br>deserves a jury.</h1>
   <p class="hero-epigraph">A space where poets read poets.</p>
   <div class="hero-ornament"><span></span><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 0L5.9 4.1L10 5L5.9 5.9L5 10L4.1 5.9L0 5L4.1 4.1Z" fill="currentColor"/></svg><span></span></div>
-  <p class="hero-statement">We all want our work read by real people who care.<br>We all deserve to hear back.</p>
-  <div class="hero-rule"></div>
 </section>
 
 <section class="process">
