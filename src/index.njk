@@ -4,6 +4,7 @@ title: "Jury of Poets — A space where poets read poets"
 description: "Every poem deserves a jury. A space where poets read poets. Written, read, and curated by poets."
 ogTitle: "Jury of Poets — Every poem deserves a jury."
 ogDescription: "A space where poets read poets. Written, read, and curated by poets."
+scrolly: true
 styles: |
   .hero { max-width: 720px; margin: 0 auto; padding: 140px 24px 48px; text-align: center; position: relative; overflow: visible; }
   .hero-title { font-family: var(--serif); font-size: clamp(44px, 8vw, 72px); font-weight: 300; letter-spacing: -0.03em; line-height: 1.08; margin-bottom: 24px; opacity: 0; animation: rise 0.8s ease forwards 0.1s; }
@@ -22,17 +23,25 @@ styles: |
   @keyframes drift1 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
   @keyframes drift2 { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-5px) rotate(4deg); } }
   @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-  .process { max-width: 600px; margin: 0 auto; padding: 32px 24px 80px; }
-  .process-label { font-family: var(--serif); font-size: 22px; font-weight: 400; font-style: italic; text-align: center; color: var(--rose); margin-bottom: 40px; }
+  #how-it-works { scroll-margin-top: 72px; }
+  .process {
+    background: #F3E8EA;
+    background: color-mix(in srgb, var(--burgundy) 8%, var(--bg));
+    padding: 64px 24px 88px;
+  }
+  .process-label,
+  .steps { max-width: 600px; margin-left: auto; margin-right: auto; }
+  .process-label { font-family: var(--serif); font-size: 22px; font-weight: 400; font-style: italic; text-align: center; color: var(--burgundy); margin-bottom: 40px; }
   .steps { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; }
   @media (max-width: 580px) { .steps { grid-template-columns: 1fr; gap: 40px; max-width: 300px; margin: 0 auto; } }
-  .step { text-align: center; opacity: 0; transform: translateY(20px); }
-  .step.visible { opacity: 1; transform: translateY(0); transition: opacity 0.6s ease, transform 0.6s ease; }
-  .step:nth-child(1).visible { transition-delay: 0s; }
-  .step:nth-child(2).visible { transition-delay: 0.12s; }
-  .step:nth-child(3).visible { transition-delay: 0.24s; }
-  .step-title { font-family: var(--serif); font-size: 19px; font-weight: 500; margin-bottom: 8px; color: var(--ink); }
-  .step-desc { font-size: 13px; color: var(--secondary); line-height: 1.6; }
+  .process .step { text-align: center; opacity: 1; transform: translateY(0); }
+  .process .step.visible { transition: opacity 0.6s ease, transform 0.6s ease; }
+  .process .step:nth-child(1).visible { transition-delay: 0s; }
+  .process .step:nth-child(2).visible { transition-delay: 0.12s; }
+  .process .step:nth-child(3).visible { transition-delay: 0.24s; }
+  .process .step-title { font-family: var(--serif); font-size: 19px; font-weight: 500; margin-bottom: 8px; color: var(--ink); }
+  .process .step-desc { font-size: 13px; color: var(--secondary); line-height: 1.6; }
+  #how-it-works .scrolly-layout { padding-top: 56px; }
   .signup { background: var(--ink); color: var(--bg); }
   .signup-inner { max-width: 480px; margin: 0 auto; padding: 100px 24px; text-align: center; }
   .signup h2 { font-family: var(--serif); font-size: clamp(26px, 5vw, 36px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 16px; }
@@ -50,16 +59,18 @@ styles: |
   @media (max-width: 640px) {
     .hero { padding: 110px 20px 40px; } .hero-title { margin-bottom: 20px; } .hero-epigraph { margin-bottom: 24px; }
     .hero-ornament { margin-bottom: 24px; }
-    .float { display: none; } .process { padding: 28px 20px 60px; } .process-label { font-size: 20px; margin-bottom: 32px; }
+    .float { display: none; }
+    .process { padding: 48px 20px 64px; }
+    .process-label { font-size: 20px; margin-bottom: 32px; }
     .signup-inner { padding: 72px 20px; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-    .hero-title, .hero-epigraph, .hero-ornament, .step, .float { opacity: 1; transform: none; }
+    .hero-title, .hero-epigraph, .hero-ornament, .process .step, .float { opacity: 1; transform: none; }
   }
 scripts: |
   <script>
-    var steps=document.querySelectorAll('.step');var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');obs.unobserve(entry.target)}})},{threshold:0.2,rootMargin:'0px 0px -40px 0px'});steps.forEach(function(el){obs.observe(el)});
+    var steps=document.querySelectorAll('.process .step');var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');obs.unobserve(entry.target)}})},{threshold:0.2,rootMargin:'0px 0px -40px 0px'});steps.forEach(function(el){obs.observe(el)});
     var form=document.getElementById('signup-form');form.addEventListener('submit',function(e){e.preventDefault();var btn=form.querySelector('button');btn.textContent='Joining...';btn.disabled=true;fetch(form.action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}}).then(function(res){if(res.ok){document.getElementById('signup-form-container').style.display='none';document.getElementById('signup-success').style.display='block'}else{btn.textContent='Report for duty';btn.disabled=false}}).catch(function(){document.getElementById('signup-form-container').style.display='none';document.getElementById('signup-success').style.display='block'})});
   </script>
 permalink: /index.html
@@ -77,6 +88,7 @@ permalink: /index.html
   <div class="hero-ornament"><span></span><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 0L5.9 4.1L10 5L5.9 5.9L5 10L4.1 5.9L0 5L4.1 4.1Z" fill="currentColor"/></svg><span></span></div>
 </section>
 
+<section id="how-it-works">
 <section class="process">
   <p class="process-label">Read to be read.</p>
   <div class="steps">
@@ -84,6 +96,8 @@ permalink: /index.html
     <div class="step"><h3 class="step-title">Read</h3><p class="step-desc">Score your fellow poets. Leave the feedback you'd want to receive.</p></div>
     <div class="step"><h3 class="step-title">Curate</h3><p class="step-desc">The best-loved poems shine. Everyone gets notes to grow on.</p></div>
   </div>
+</section>
+{% include "how-it-works-scrolly.njk" %}
 </section>
 
 <section class="signup" id="join">

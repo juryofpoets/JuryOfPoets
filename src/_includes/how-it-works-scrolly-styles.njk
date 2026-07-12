@@ -1,0 +1,384 @@
+  :root { --j1: #C4626A; --j2: #7E6AAE; --j3: #5A9A60; --j4: #C49A30; }
+  #how-it-works .scrolly-layout {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      gap: 60px;
+      position: relative;
+    }
+
+    .stage-container {
+      flex: 1;
+      position: sticky;
+      top: 100px;
+      height: 60vh;
+      min-height: 400px;
+      background: var(--warm);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .text-container {
+      flex: 1;
+      padding-bottom: 50vh;
+    }
+
+    .step-block {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 1;
+    }
+
+    .step-block h2,
+    .step-block p:not(.step-number),
+    .step-block .step-detail {
+      opacity: 0.3;
+      transition: opacity 0.5s ease;
+    }
+
+    .step-block.is-active h2,
+    .step-block.is-active p:not(.step-number),
+    .step-block.is-active .step-detail { opacity: 1; }
+
+    .step-number {
+      display: block;
+      font-family: var(--serif);
+      font-size: 32px;
+      font-weight: 300;
+      color: var(--rule);
+      line-height: 1;
+      margin-bottom: 12px;
+      opacity: 1 !important;
+      transition: color 0.5s ease;
+    }
+    .step-block.is-active .step-number { color: var(--rose); }
+
+    .step-block h2 { font-family: var(--serif); font-size: 32px; margin-bottom: 10px; font-weight: 400; transition: opacity 0.5s ease; }
+    .step-block p:not(.step-number) { font-size: 15px; color: var(--secondary); line-height: 1.7; margin-bottom: 8px; transition: opacity 0.5s ease; }
+    .step-block .step-detail { font-size: 13px; color: var(--tertiary); line-height: 1.6; font-style: italic; display: block; margin-top: 4px; transition: opacity 0.5s ease; }
+
+    #stage {
+      width: 100%; height: 100%;
+      position: relative;
+    }
+
+    .walls {
+      position: absolute; top: 10%; left: 10%; right: 10%; bottom: 10%;
+      border: 2.5px solid var(--rule);
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .walls::before, .walls::after {
+      content: ''; position: absolute; background: var(--rule);
+    }
+    .walls::before { top: 0; bottom: 0; left: 50%; width: 2.5px; }
+    .walls::after { left: 0; right: 0; top: 50%; height: 2.5px; }
+
+    .room-label {
+      position: absolute;
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 1s ease;
+      z-index: 5;
+    }
+    .label-a { top: 12%; left: 14%; color: var(--j1); }
+    .label-b { top: 12%; right: 14%; color: var(--j2); }
+    .label-c { bottom: 12%; right: 14%; color: var(--j3); }
+    .label-d { bottom: 12%; left: 14%; color: var(--j4); }
+
+    #stage[data-scene="2"] .room-label,
+    #stage[data-scene="3"] .room-label { opacity: 1; }
+    #stage[data-scene="4"] .room-label { opacity: 0.4; }
+    #stage[data-scene="5"] .room-label { opacity: 0.15; }
+
+    .poet {
+      position: absolute;
+      width: 24px; height: 38px;
+      top: 50%; left: 50%;
+      opacity: 0;
+      transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 3;
+    }
+    .poet::before {
+      content: '';
+      position: absolute;
+      left: 50%; top: 0;
+      width: 16px; height: 16px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: #f0d0bc;
+      border: 1.5px solid rgba(61,32,40,0.12);
+    }
+    .poet::after {
+      content: '';
+      position: absolute;
+      left: 50%; top: 15px;
+      width: 20px; height: 20px;
+      transform: translateX(-50%);
+      border-radius: 10px 10px 6px 6px;
+      background: var(--secondary);
+      transition: background 1.2s ease;
+      border: 1.5px solid rgba(61,32,40,0.08);
+    }
+
+    .poem {
+      position: absolute;
+      width: 20px; height: 28px;
+      background: white;
+      border: 1.5px solid rgba(61,32,40,0.18);
+      border-radius: 3px;
+      box-shadow: 0 2px 8px rgba(61,32,40,0.1);
+      top: 50%; left: 50%;
+      opacity: 0;
+      transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 10;
+    }
+    .poem::before {
+      content: '';
+      position: absolute;
+      left: 4px; right: 4px; top: 6px;
+      height: 2px;
+      background: rgba(61,32,40,0.15);
+      box-shadow: 0 5px 0 rgba(61,32,40,0.12), 0 10px 0 rgba(61,32,40,0.09);
+    }
+
+    .g1.poem { border-left: 4px solid transparent; }
+    .g2.poem { border-left: 4px solid transparent; }
+    .g3.poem { border-left: 4px solid transparent; }
+    .g4.poem { border-left: 4px solid transparent; }
+
+    #stage[data-scene="2"] .g1.poem,
+    #stage[data-scene="3"] .g1.poem,
+    #stage[data-scene="4"] .g1.poem,
+    #stage[data-scene="5"] .g1.poem { border-left-color: var(--j1); }
+    #stage[data-scene="2"] .g2.poem,
+    #stage[data-scene="3"] .g2.poem,
+    #stage[data-scene="4"] .g2.poem,
+    #stage[data-scene="5"] .g2.poem { border-left-color: var(--j2); }
+    #stage[data-scene="2"] .g3.poem,
+    #stage[data-scene="3"] .g3.poem,
+    #stage[data-scene="4"] .g3.poem,
+    #stage[data-scene="5"] .g3.poem { border-left-color: var(--j3); }
+    #stage[data-scene="2"] .g4.poem,
+    #stage[data-scene="3"] .g4.poem,
+    #stage[data-scene="4"] .g4.poem,
+    #stage[data-scene="5"] .g4.poem { border-left-color: var(--j4); }
+
+    #stage[data-scene="1"] .poet { opacity: 1; }
+    #stage[data-scene="1"] .poet::after { background: var(--tertiary) !important; }
+    #stage[data-scene="1"] .poem { opacity: 1; margin-top: 2px; margin-left: 14px; }
+    #stage[data-scene="1"] .g1.p1 { left: 15%; top: 20%; }
+    #stage[data-scene="1"] .g1.p2 { left: 55%; top: 55%; }
+    #stage[data-scene="1"] .g1.p3 { left: 82%; top: 30%; }
+    #stage[data-scene="1"] .g2.p1 { left: 40%; top: 15%; }
+    #stage[data-scene="1"] .g2.p2 { left: 25%; top: 70%; }
+    #stage[data-scene="1"] .g2.p3 { left: 70%; top: 75%; }
+    #stage[data-scene="1"] .g3.p1 { left: 65%; top: 18%; }
+    #stage[data-scene="1"] .g3.p2 { left: 10%; top: 45%; }
+    #stage[data-scene="1"] .g3.p3 { left: 48%; top: 82%; }
+    #stage[data-scene="1"] .g4.p1 { left: 30%; top: 40%; }
+    #stage[data-scene="1"] .g4.p2 { left: 78%; top: 55%; }
+    #stage[data-scene="1"] .g4.p3 { left: 18%; top: 85%; }
+
+    #stage[data-scene="2"] .walls { opacity: 1; }
+    #stage[data-scene="2"] .poet { opacity: 1; }
+    #stage[data-scene="2"] .poem { opacity: 1; margin-top: 2px; margin-left: 14px; }
+    #stage[data-scene="2"] .g1.poet::after { background: var(--j1); }
+    #stage[data-scene="2"] .g1.p1 { top: 20%; left: 20%; }
+    #stage[data-scene="2"] .g1.p2 { top: 30%; left: 30%; }
+    #stage[data-scene="2"] .g1.p3 { top: 36%; left: 18%; }
+    #stage[data-scene="2"] .g2.poet::after { background: var(--j2); }
+    #stage[data-scene="2"] .g2.p1 { top: 20%; left: 65%; }
+    #stage[data-scene="2"] .g2.p2 { top: 30%; left: 75%; }
+    #stage[data-scene="2"] .g2.p3 { top: 36%; left: 63%; }
+    #stage[data-scene="2"] .g3.poet::after { background: var(--j3); }
+    #stage[data-scene="2"] .g3.p1 { top: 62%; left: 65%; }
+    #stage[data-scene="2"] .g3.p2 { top: 72%; left: 75%; }
+    #stage[data-scene="2"] .g3.p3 { top: 78%; left: 63%; }
+    #stage[data-scene="2"] .g4.poet::after { background: var(--j4); }
+    #stage[data-scene="2"] .g4.p1 { top: 62%; left: 20%; }
+    #stage[data-scene="2"] .g4.p2 { top: 72%; left: 30%; }
+    #stage[data-scene="2"] .g4.p3 { top: 78%; left: 18%; }
+
+    #stage[data-scene="3"] .walls { opacity: 1; }
+    #stage[data-scene="3"] .poet { opacity: 1; }
+    #stage[data-scene="3"] .g1.poet::after { background: var(--j1); }
+    #stage[data-scene="3"] .g1.poet.p1 { top: 14%; left: 28%; }
+    #stage[data-scene="3"] .g1.poet.p2 { top: 38%; left: 14%; }
+    #stage[data-scene="3"] .g1.poet.p3 { top: 38%; left: 40%; }
+    #stage[data-scene="3"] .g2.poet::after { background: var(--j2); }
+    #stage[data-scene="3"] .g2.poet.p1 { top: 14%; left: 72%; }
+    #stage[data-scene="3"] .g2.poet.p2 { top: 38%; left: 56%; }
+    #stage[data-scene="3"] .g2.poet.p3 { top: 38%; left: 84%; }
+    #stage[data-scene="3"] .g3.poet::after { background: var(--j3); }
+    #stage[data-scene="3"] .g3.poet.p1 { top: 56%; left: 72%; }
+    #stage[data-scene="3"] .g3.poet.p2 { top: 78%; left: 56%; }
+    #stage[data-scene="3"] .g3.poet.p3 { top: 78%; left: 84%; }
+    #stage[data-scene="3"] .g4.poet::after { background: var(--j4); }
+    #stage[data-scene="3"] .g4.poet.p1 { top: 56%; left: 28%; }
+    #stage[data-scene="3"] .g4.poet.p2 { top: 78%; left: 14%; }
+    #stage[data-scene="3"] .g4.poet.p3 { top: 78%; left: 40%; }
+    #stage[data-scene="3"] .g4.poem { opacity: 1; margin: 0; }
+    #stage[data-scene="3"] .g4.poem.p1 { top: 27%; left: 24%; transform: rotate(-4deg); }
+    #stage[data-scene="3"] .g4.poem.p2 { top: 27%; left: 30%; transform: rotate(6deg); }
+    #stage[data-scene="3"] .g4.poem.p3 { top: 27%; left: 36%; transform: rotate(-2deg); }
+    #stage[data-scene="3"] .g1.poem { opacity: 1; margin: 0; }
+    #stage[data-scene="3"] .g1.poem.p1 { top: 27%; left: 66%; transform: rotate(5deg); }
+    #stage[data-scene="3"] .g1.poem.p2 { top: 27%; left: 72%; transform: rotate(-7deg); }
+    #stage[data-scene="3"] .g1.poem.p3 { top: 27%; left: 78%; transform: rotate(3deg); }
+    #stage[data-scene="3"] .g2.poem { opacity: 1; margin: 0; }
+    #stage[data-scene="3"] .g2.poem.p1 { top: 67%; left: 66%; transform: rotate(-3deg); }
+    #stage[data-scene="3"] .g2.poem.p2 { top: 67%; left: 72%; transform: rotate(8deg); }
+    #stage[data-scene="3"] .g2.poem.p3 { top: 67%; left: 78%; transform: rotate(-5deg); }
+    #stage[data-scene="3"] .g3.poem { opacity: 1; margin: 0; }
+    #stage[data-scene="3"] .g3.poem.p1 { top: 67%; left: 24%; transform: rotate(4deg); }
+    #stage[data-scene="3"] .g3.poem.p2 { top: 67%; left: 30%; transform: rotate(-6deg); }
+    #stage[data-scene="3"] .g3.poem.p3 { top: 67%; left: 36%; transform: rotate(2deg); }
+
+    #stage[data-scene="4"] .walls { opacity: 0.5; }
+    #stage[data-scene="4"] .poet { opacity: 0.5; }
+    #stage[data-scene="4"] .g1.poet::after { background: var(--j1); }
+    #stage[data-scene="4"] .g1.poet.p1 { top: 14%; left: 28%; }
+    #stage[data-scene="4"] .g1.poet.p2 { top: 38%; left: 14%; }
+    #stage[data-scene="4"] .g1.poet.p3 { top: 38%; left: 40%; }
+    #stage[data-scene="4"] .g2.poet::after { background: var(--j2); }
+    #stage[data-scene="4"] .g2.poet.p1 { top: 14%; left: 72%; }
+    #stage[data-scene="4"] .g2.poet.p2 { top: 38%; left: 56%; }
+    #stage[data-scene="4"] .g2.poet.p3 { top: 38%; left: 84%; }
+    #stage[data-scene="4"] .g3.poet::after { background: var(--j3); }
+    #stage[data-scene="4"] .g3.poet.p1 { top: 56%; left: 72%; }
+    #stage[data-scene="4"] .g3.poet.p2 { top: 78%; left: 56%; }
+    #stage[data-scene="4"] .g3.poet.p3 { top: 78%; left: 84%; }
+    #stage[data-scene="4"] .g4.poet::after { background: var(--j4); }
+    #stage[data-scene="4"] .g4.poet.p1 { top: 56%; left: 28%; }
+    #stage[data-scene="4"] .g4.poet.p2 { top: 78%; left: 14%; }
+    #stage[data-scene="4"] .g4.poet.p3 { top: 78%; left: 40%; }
+    #stage[data-scene="4"] .poem { opacity: 1; margin: 0; transform: rotate(0deg) !important; }
+    #stage[data-scene="4"] .poem.rank-third { opacity: 0.25; width: 14px; height: 18px; }
+    #stage[data-scene="4"] .poem.rank-second { opacity: 0.5; width: 20px; height: 28px; }
+    #stage[data-scene="4"] .winner { width: 32px; height: 42px; border-width: 2px; border-color: var(--gold-muted); box-shadow: 0 0 24px rgba(196, 154, 48, 0.5), 0 2px 8px rgba(61,32,40,0.1); }
+    #stage[data-scene="4"] .g4.poem.p3 { top: 22%; left: 28%; }
+    #stage[data-scene="4"] .g4.poem.p1 { top: 32%; left: 24%; }
+    #stage[data-scene="4"] .g4.poem.p2 { top: 33%; left: 33%; }
+    #stage[data-scene="4"] .g1.poem.p3 { top: 22%; left: 72%; }
+    #stage[data-scene="4"] .g1.poem.p1 { top: 32%; left: 68%; }
+    #stage[data-scene="4"] .g1.poem.p2 { top: 33%; left: 77%; }
+    #stage[data-scene="4"] .g2.poem.p2 { top: 62%; left: 72%; }
+    #stage[data-scene="4"] .g2.poem.p3 { top: 72%; left: 68%; }
+    #stage[data-scene="4"] .g2.poem.p1 { top: 73%; left: 77%; }
+    #stage[data-scene="4"] .g3.poem.p1 { top: 62%; left: 28%; }
+    #stage[data-scene="4"] .g3.poem.p2 { top: 72%; left: 24%; }
+    #stage[data-scene="4"] .g3.poem.p3 { top: 73%; left: 33%; }
+
+    .rank-badge {
+      position: absolute;
+      top: -12px; right: -12px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      opacity: 0;
+      transition: all 1.2s ease;
+      z-index: 20;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .rank-1 { background: var(--gold-muted); }
+    .rank-2 { background: var(--tertiary); }
+    .rank-3 { background: var(--rule); color: var(--secondary); }
+    #stage[data-scene="4"] .rank-badge { opacity: 1; }
+    #stage[data-scene="5"] .winner .rank-badge { opacity: 1; }
+
+    #stage[data-scene="5"] .walls { opacity: 0.08; }
+    #stage[data-scene="5"] .poet { opacity: 0.1; }
+    #stage[data-scene="5"] .poem { opacity: 0; }
+    #stage[data-scene="5"] .g1.poet::after { background: var(--j1); }
+    #stage[data-scene="5"] .g1.poet.p1 { top: 20%; left: 20%; }
+    #stage[data-scene="5"] .g2.poet::after { background: var(--j2); }
+    #stage[data-scene="5"] .g2.poet.p1 { top: 20%; left: 65%; }
+    #stage[data-scene="5"] .g3.poet::after { background: var(--j3); }
+    #stage[data-scene="5"] .g3.poet.p1 { top: 62%; left: 65%; }
+    #stage[data-scene="5"] .g4.poet::after { background: var(--j4); }
+    #stage[data-scene="5"] .g4.poet.p1 { top: 62%; left: 20%; }
+    #stage[data-scene="5"] .winner {
+      opacity: 1 !important;
+      top: 38%;
+      background: white;
+      border-color: var(--gold-muted);
+      border-width: 2.5px;
+      width: 40px; height: 52px;
+      border-radius: 4px;
+      box-shadow: 0 0 36px rgba(196, 154, 48, 0.5), 0 4px 16px rgba(61,32,40,0.12);
+      transform: rotate(0deg) !important;
+    }
+    #stage[data-scene="5"] .g1.winner { left: 22%; }
+    #stage[data-scene="5"] .g2.winner { left: 39%; }
+    #stage[data-scene="5"] .g3.winner { left: 56%; }
+    #stage[data-scene="5"] .g4.winner { left: 73%; }
+
+    .winner-star {
+      position: absolute;
+      font-size: 11px;
+      color: var(--gold-muted);
+      opacity: 0;
+      transition: all 1.2s ease;
+      z-index: 15;
+    }
+    #stage[data-scene="5"] .winner-star { opacity: 1; }
+    .star-1 { top: 32%; left: 24%; }
+    .star-2 { top: 32%; left: 41%; }
+    .star-3 { top: 32%; left: 58%; }
+    .star-4 { top: 32%; left: 75%; }
+
+    .dest-label {
+      position: absolute;
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      color: var(--tertiary);
+      opacity: 0;
+      transition: all 1.2s ease;
+      z-index: 15;
+      white-space: nowrap;
+    }
+    #stage[data-scene="5"] .dest-label { opacity: 1; }
+    .dest-1 { top: 62%; left: 18%; }
+    .dest-2 { top: 62%; left: 35%; }
+    .dest-3 { top: 62%; left: 52%; }
+    .dest-4 { top: 62%; left: 69%; }
+
+    .scene-label {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: var(--tertiary);
+      letter-spacing: 0.06em;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      z-index: 20;
+      white-space: nowrap;
+    }
+    #stage[data-scene="1"] .scene-label-1 { opacity: 1; }
+    #stage[data-scene="2"] .scene-label-2 { opacity: 1; }
+    #stage[data-scene="3"] .scene-label-3 { opacity: 1; }
+    #stage[data-scene="4"] .scene-label-4 { opacity: 1; }
+    #stage[data-scene="5"] .scene-label-5 { opacity: 1; }
+
+    @media (max-width: 768px) {
+      .scrolly-layout { flex-direction: column; }
+      .stage-container { top: 20px; height: 40vh; z-index: 100; }
+    }
