@@ -42,6 +42,34 @@ styles: |
   .process .step-title { font-family: var(--serif); font-size: 19px; font-weight: 500; margin-bottom: 8px; color: var(--ink); }
   .process .step-desc { font-size: 13px; color: var(--secondary); line-height: 1.6; }
   #how-it-works .scrolly-layout { padding-top: 56px; }
+  .poems-section { padding: 80px 24px 100px; text-align: center; background: #F3E8EA; background: color-mix(in srgb, var(--burgundy) 8%, var(--bg)); border-top: 1px solid var(--rule); }
+  .poems-section-inner { max-width: 480px; margin: 0 auto; }
+  .poems-section-title { font-family: var(--serif); font-size: clamp(26px, 5vw, 36px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .poems-section-sub { font-size: 14px; color: var(--tertiary); margin-bottom: 40px; }
+  .poems-section .deck { position: relative; height: 380px; touch-action: pan-y; }
+  .poems-section .poem-card { position: absolute; width: 100%; left: 0; top: 0; height: 100%; background: white; border: 1px solid var(--rule); border-radius: 8px; padding: 32px; display: flex; flex-direction: column; align-items: center; text-align: center; transition: opacity 0.4s ease, transform 0.4s ease; user-select: none; text-decoration: none; color: inherit; opacity: 0; pointer-events: none; transform: translateX(20px); }
+  .poems-section .poem-card.front { opacity: 1; pointer-events: auto; cursor: pointer; transform: translateX(0); z-index: 1; }
+  .poems-section .poem-card.front:hover { box-shadow: 0 8px 40px rgba(61, 32, 40, 0.08); border-color: var(--rose-soft); }
+  .poems-section .poem-card.gone-left { opacity: 0; transform: translateX(-20px); }
+  .poems-section .poem-card.gone-right { opacity: 0; transform: translateX(20px); }
+  .poems-section .pc-tags { display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; }
+  .poems-section .pc-tag { font-size: 11px; padding: 3px 12px; border-radius: 100px; background: var(--warm); color: var(--tertiary); }
+  .poems-section .pc-title { font-family: var(--serif); font-size: clamp(20px, 4vw, 26px); font-weight: 500; line-height: 1.25; height: 66px; display: flex; align-items: center; justify-content: center; }
+  .poems-section .pc-title.lining { font-variant-numeric: lining-nums; letter-spacing: -0.02em; }
+  .poems-section .pc-author { font-family: var(--serif); font-size: 16px; font-style: italic; font-weight: 300; color: var(--secondary); margin: 8px 0 24px; }
+  .poems-section .pc-ornament { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
+  .poems-section .pc-ornament span { width: 20px; height: 1px; background: var(--rule); }
+  .poems-section .pc-ornament svg { color: var(--gold-muted); }
+  .poems-section .pc-quote { font-family: var(--serif); font-size: 19px; font-weight: 300; color: var(--ink); line-height: 1.7; }
+  .poems-section .pc-read { font-size: 13px; color: var(--rose); transition: color 0.2s; margin-top: auto; padding-top: 20px; }
+  .poems-section .poem-card.front:hover .pc-read { color: var(--ink); }
+  .poems-section .deck-nav { display: flex; justify-content: center; gap: 6px; margin-top: 24px; align-items: center; }
+  .poems-section .deck-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rule); transition: background 0.3s, transform 0.3s; cursor: pointer; }
+  .poems-section .deck-dot.active { background: var(--ink); transform: scale(1.4); }
+  .poems-section .deck-arrow { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--rule); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--tertiary); transition: border-color 0.2s, color 0.2s; margin: 0 8px; }
+  .poems-section .deck-arrow:hover { border-color: var(--rose-soft); color: var(--ink); }
+  .poems-section .all-poems-link { display: inline-block; margin-top: 32px; font-size: 13px; color: var(--tertiary); text-decoration: none; transition: color 0.2s; }
+  .poems-section .all-poems-link:hover { color: var(--ink); }
   .signup { background: var(--ink); color: var(--bg); }
   .signup-inner { max-width: 480px; margin: 0 auto; padding: 100px 24px; text-align: center; }
   .signup h2 { font-family: var(--serif); font-size: clamp(26px, 5vw, 36px); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 16px; }
@@ -63,6 +91,8 @@ styles: |
     .process { padding: 48px 20px 64px; }
     .process-label { font-size: 20px; margin-bottom: 32px; }
     .signup-inner { padding: 72px 20px; }
+    .poems-section { padding: 60px 16px 80px; }
+    .poems-section .poem-card { padding: 32px 24px 28px; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -99,6 +129,52 @@ permalink: /index.html
 </section>
 {% include "how-it-works-scrolly.njk" %}
 </section>
+
+<section class="poems-section">
+  <div class="poems-section-inner">
+    <h2 class="poems-section-title">Poems</h2>
+    <p class="poems-section-sub">For now, enjoy some poetry by our very own Ronan.</p>
+    <div class="deck" id="home-deck"></div>
+    <div class="deck-nav" id="home-deck-nav"></div>
+    <a href="/poems/" class="all-poems-link">See all poems →</a>
+  </div>
+</section>
+
+<script>
+(function(){
+  var poems = [{% for poem in collections.poems %}{ title: "{{ poem.data.title }}", author: "{{ poem.data.author }}", tags: {{ poem.data.poemTags | dump | safe }}, quote: "{{ poem.data.quote | safe }}", url: "{{ poem.url }}", titleClass: "{{ poem.data.titleClass or '' }}" }{% if not loop.last %},{% endif %}{% endfor %}];
+  var ci = 0;
+  function render() {
+    var deckEl = document.getElementById("home-deck");
+    deckEl.innerHTML = "";
+    poems.forEach(function(poem, i) {
+      var card = document.createElement("a");
+      card.href = poem.url;
+      card.className = "poem-card";
+      if (i === ci) card.classList.add("front");
+      else if (i < ci) card.classList.add("gone-left");
+      else card.classList.add("gone-right");
+      card.innerHTML = '<div class="pc-tags">' + poem.tags.map(function(t) { return '<span class="pc-tag">' + t + '</span>'; }).join("") + '</div><h2 class="pc-title' + (poem.titleClass ? ' ' + poem.titleClass : '') + '">' + poem.title + '</h2><p class="pc-author">' + poem.author + '</p><div class="pc-ornament"><span></span><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M4 0L4.7 3.3L8 4L4.7 4.7L4 8L3.3 4.7L0 4L3.3 3.3Z" fill="currentColor"/></svg><span></span></div><p class="pc-quote">' + poem.quote + '</p><p class="pc-read">Read the poem \u2192</p>';
+      deckEl.appendChild(card);
+    });
+    var navEl = document.getElementById("home-deck-nav");
+    navEl.innerHTML = "";
+    if (poems.length > 1) {
+      var prev = document.createElement("button"); prev.className = "deck-arrow"; prev.innerHTML = "\u2190";
+      prev.onclick = function(e) { e.preventDefault(); ci = (ci - 1 + poems.length) % poems.length; render(); };
+      navEl.appendChild(prev);
+      poems.forEach(function(_, i) { var dot = document.createElement("span"); dot.className = "deck-dot" + (i === ci ? " active" : ""); dot.onclick = function() { ci = i; render(); }; navEl.appendChild(dot); });
+      var next = document.createElement("button"); next.className = "deck-arrow"; next.innerHTML = "\u2192";
+      next.onclick = function(e) { e.preventDefault(); ci = (ci + 1) % poems.length; render(); };
+      navEl.appendChild(next);
+    }
+  }
+  render();
+  var startX = 0, hd = document.getElementById("home-deck");
+  hd.addEventListener("touchstart", function(e) { startX = e.touches[0].clientX; }, { passive: true });
+  hd.addEventListener("touchend", function(e) { var diff = startX - e.changedTouches[0].clientX; if (Math.abs(diff) > 50 && poems.length > 1) { if (diff > 0) ci = (ci + 1) % poems.length; else ci = (ci - 1 + poems.length) % poems.length; render(); } }, { passive: true });
+})();
+</script>
 
 <section class="signup" id="join">
   <div class="signup-inner">
