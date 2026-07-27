@@ -25,6 +25,7 @@ styles: |
   .pc-tags { display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; }
   .pc-tag { font-size: 11px; padding: 3px 12px; border-radius: 100px; background: var(--warm); color: var(--tertiary); }
   .pc-title { font-family: var(--serif); font-size: clamp(20px, 4vw, 26px); font-weight: 500; line-height: 1.25; height: 66px; display: flex; align-items: center; justify-content: center; }
+  .pc-title.lining { font-variant-numeric: lining-nums; letter-spacing: -0.02em; }
   .pc-author { font-family: var(--serif); font-size: 16px; font-style: italic; font-weight: 300; color: var(--secondary); margin: 8px 0 24px; }
   .pc-ornament { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
   .pc-ornament span { width: 20px; height: 1px; background: var(--rule); }
@@ -53,7 +54,7 @@ styles: |
 </main>
 
 <script>
-  var poems = [{% for poem in collections.poems %}{ title: "{{ poem.data.title }}", author: "{{ poem.data.author }}", tags: {{ poem.data.poemTags | dump | safe }}, quote: "{{ poem.data.quote | safe }}", url: "{{ poem.url }}" }{% if not loop.last %},{% endif %}{% endfor %}];
+  var poems = [{% for poem in collections.poems %}{ title: "{{ poem.data.title }}", author: "{{ poem.data.author }}", tags: {{ poem.data.poemTags | dump | safe }}, quote: "{{ poem.data.quote | safe }}", url: "{{ poem.url }}", titleClass: "{{ poem.data.titleClass or '' }}" }{% if not loop.last %},{% endif %}{% endfor %}];
   var allTags = {{ allTags | dump | safe }};
   var activeTag = "all", currentIndex = 0, filtered = poems.slice();
   function render() {
@@ -84,7 +85,7 @@ styles: |
         if (i === currentIndex) card.classList.add("front");
         else if (i < currentIndex) card.classList.add("gone-left");
         else card.classList.add("gone-right");
-        card.innerHTML = '<div class="pc-tags">' + poem.tags.map(function(t) { return '<span class="pc-tag">' + t + '</span>'; }).join("") + '</div><h2 class="pc-title">' + poem.title + '</h2><p class="pc-author">' + poem.author + '</p><div class="pc-ornament"><span></span><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M4 0L4.7 3.3L8 4L4.7 4.7L4 8L3.3 4.7L0 4L3.3 3.3Z" fill="currentColor"/></svg><span></span></div><p class="pc-quote">' + poem.quote + '</p><p class="pc-read">Read the poem \u2192</p>';
+        card.innerHTML = '<div class="pc-tags">' + poem.tags.map(function(t) { return '<span class="pc-tag">' + t + '</span>'; }).join("") + '</div><h2 class="pc-title' + (poem.titleClass ? ' ' + poem.titleClass : '') + '">' + poem.title + '</h2><p class="pc-author">' + poem.author + '</p><div class="pc-ornament"><span></span><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M4 0L4.7 3.3L8 4L4.7 4.7L4 8L3.3 4.7L0 4L3.3 3.3Z" fill="currentColor"/></svg><span></span></div><p class="pc-quote">' + poem.quote + '</p><p class="pc-read">Read the poem \u2192</p>';
         deckEl.appendChild(card);
       });
     }
