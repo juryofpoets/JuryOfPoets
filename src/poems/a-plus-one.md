@@ -3,7 +3,7 @@ layout: poem.njk
 title: "a +1"
 author: "Ronan Rahl"
 poemTags: ["confessional", "referential", "love"]
-quote: "to be your permanent +1."
+quote: "to stand where my stranger stood too."
 order: 6
 titleClass: lining
 tags: poem
